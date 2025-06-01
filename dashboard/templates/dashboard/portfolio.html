@@ -1,0 +1,176 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <!-- Profile Section -->
+    <div class="mb-5">
+        <img
+            id="profilePreview"
+            src="{% if user_profile.profile_photo %}{{ user_profile.profile_photo.url }}{% else %}https://tse1.mm.bing.net/th?id=OIP.zL0K37KuW9He0Z00tfZw-QHaK5&pid=Api{% endif %}"
+            class="rounded-circle"
+            alt="Profile Picture"
+            width="150"
+            style="object-fit: cover; height: 150px;"
+        >
+        <h2 class="fw-bold text-primary mt-3">Welcome, {{ request.user.username }}</h2>
+        <p class="text-muted">BSIT - 3B | 21 Years Old</p>
+        <p class="lead text-dark">Aspiring software developer passionate about web development, UI/UX design, and problem-solving.</p>
+    </div>
+
+    <h2>Upload Profile Photo</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.profile_photo.label_tag }}
+            {{ form.profile_photo }}
+            {{ form.profile_photo.errors }}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    
+
+    {% if user_profile.qr_code %}
+        <h5>Your QR Code:</h5>
+        <img src="{{ user_profile.qr_code.url }}" alt="QR Code" style="width: 200px;">
+    {% else %}
+        <p>No QR code available.</p>
+    {% endif %}
+
+
+
+
+    <!-- Portfolio Projects Section -->
+     <div class="text-end mb-4">
+    <a href="{% url 'crud_test' %}" class="btn btn-success">➕ Manage CRUD Data</a>
+
+</div>
+    <h3 class="text-center mb-4">My Projects</h3>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                <img src="https://www.zarla.com/images/zarla-it-website-examples-3840x2400-20240730.webp?width=1056&dpr=2&crop=2:1&format=jpg" class="card-img-top" alt="Project 1">
+                <div class="card-body">
+                    <h5 class="card-title">Project One</h5>
+                    <p class="card-text">A web-based system for efficient task management.</p>
+                    <a href="#" class="btn btn-outline-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTplefHm_oFlv-yoG2dMDQa1kM6p2nTv6aNFA&s" class="card-img-top" alt="Project 2">
+                <div class="card-body">
+                    <h5 class="card-title">Project Two</h5>
+                    <p class="card-text">A mobile-friendly app for event management.</p>
+                    <a href="#" class="btn btn-outline-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdrfjwltSkhkLbf3PqmPwXHlyHfLPg90jtfw&s" class="card-img-top" alt="Project 2">
+                <div class="card-body">
+                    <h5 class="card-title">Project Three</h5>
+                    <p class="card-text">A mobile-friendly app for event management.</p>
+                    <a href="#" class="btn btn-outline-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Skills Section -->
+    <div class="mt-5">
+        <h3 class="fw-bold text-dark">My Skills</h3>
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card border-primary shadow-sm p-3">
+                    <h5 class="fw-bold text-primary">Web Development</h5>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card border-success shadow-sm p-3">
+                    <h5 class="fw-bold text-success">Python & Django</h5>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card border-danger shadow-sm p-3">
+                    <h5 class="fw-bold text-danger">UI/UX Design</h5>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card border-warning shadow-sm p-3">
+                    <h5 class="fw-bold text-warning">Database Management</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Styles -->
+<style>
+    /* Profile Image */
+    .rounded-circle {
+        border: 5px solid #007bff;
+    }
+
+    /* Portfolio Card Styles */
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    /* Skills Section */
+    .card.border-primary, .card.border-success, .card.border-danger, .card.border-warning {
+        text-align: center;
+        font-size: 1rem;
+    }
+</style>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('photo');
+    const previewImg = document.getElementById('profilePreview');
+    if (fileInput && previewImg) {
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

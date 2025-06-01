@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sign Up</title>
+<style>
+  /* Reset */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #f5f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .signup-container {
+    background: white;
+    padding: 40px 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  h2 {
+    margin-bottom: 25px;
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-align: center;
+    color: #222;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #555;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    border-color: #5a67d8;
+    outline: none;
+    box-shadow: 0 0 8px rgba(90,103,216,0.3);
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    background: #5a67d8;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+  }
+
+  button:hover {
+    background: #434190;
+  }
+
+  p {
+    margin-top: 22px;
+    font-size: 0.95rem;
+    text-align: center;
+    color: #666;
+  }
+
+  p a {
+    color: #5a67d8;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+
+  p a:hover {
+    color: #434190;
+    text-decoration: underline;
+  }
+</style>
+</head>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("signup-form");
+      const message = document.getElementById("message");
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const response = await fetch("http://127.0.0.1:8000/register/", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ username, password })
+});
+
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert("Signup successful!");
+          window.location.href = "/"; // or login page
+        } else {
+          message.textContent = result.detail || "Signup failed";
+        }
+      });
+    });
+  </script>
+
+<body>
+  <div class="signup-container">
+    <h2>Register</h2>
+     <form method="POST" action="{% url 'ua:signup' %}">
+      {% csrf_token %}
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required><br><br>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required><br><br>
+
+      <button type="submit">Sign Up</button>
+    </form>
+<p id="responseMsg" style="text-align:center;"></p>
+
+    <p>Already have an account? <a href="{% url 'home' %}">Login</a></p>
+  </div>
+</body>
+</html>

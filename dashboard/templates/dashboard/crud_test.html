@@ -1,0 +1,62 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="container mt-5">
+
+    <h2>CRUD Test Form</h2>
+
+    <!-- Form for Create/Update -->
+    <form method="POST" id="crudForm" class="mb-4">
+        {% csrf_token %}
+        <input type="hidden" name="entry_id" id="entry_id" value="">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" required class="form-control" placeholder="Enter name">
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Save</button>
+        <button type="button" id="cancelBtn" class="btn btn-secondary mt-2" style="display:none;">Cancel</button>
+    </form>
+
+    <!-- List all entries -->
+    <h3>Entries</h3>
+    <ul class="list-group">
+        {% for entry in entries %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ entry.name }}
+            <span>
+                <button class="btn btn-sm btn-warning editBtn" data-id="{{ entry.id }}" data-name="{{ entry.name }}">Edit</button>
+                <a href="{% url 'delete_entry' entry.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this entry?')">Delete</a>
+            </span>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No entries found.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+    const editButtons = document.querySelectorAll('.editBtn');
+    const entryIdInput = document.getElementById('entry_id');
+    const nameInput = document.getElementById('name');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    editButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const name = btn.getAttribute('data-name');
+
+            entryIdInput.value = id;
+            nameInput.value = name;
+            nameInput.focus();
+
+            cancelBtn.style.display = 'inline-block';
+        });
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        entryIdInput.value = '';
+        nameInput.value = '';
+        cancelBtn.style.display = 'none';
+    });
+</script>
+
+{% endblock %}
